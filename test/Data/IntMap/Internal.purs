@@ -6,7 +6,7 @@ import Data.IntMap.Internal (
 , branchingBit, _mask, highestBit
 , highestBitMask
 )
-import Prelude (($), (-), negate, bind, (<<<))
+import Prelude
 import Test.Unit (suite, test)
 import Test.Unit.Assert as Assert
 import Test.Unit.QuickCheck (quickCheck)

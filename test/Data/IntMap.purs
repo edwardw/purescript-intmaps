@@ -1,20 +1,20 @@
 module Test.Data.IntMap where
 
+import Prelude
 import Data.Foldable (foldMap, foldr, foldl, elem)
 import Data.Array ((:))
 import Data.Tuple (Tuple(Tuple))
 import Data.Maybe (Maybe(Just, Nothing), maybe)
 import Test.Data.IntMap.Internal as Internal
-import Test.Unit (Test (), suite, test)
+import Test.Unit (TestSuite, suite, test)
 import Test.Unit.Assert as Assert
 import Test.Unit.QuickCheck (quickCheck)
 import Test.QuickCheck ((===))
 import Test.QuickCheck.Arbitrary (class Arbitrary, arbitrary)
-import Prelude (
-  class Show, show
-, (+), (/=), ($), (#), (<$>), (<<<)
-, map, bind, const, eq, pure, not)
-import Data.IntMap
+
+import Data.IntMap (IntMap, alter, delete, difference, empty, filter, filterWithKey, fromAssocArray, indices, insert, lookup, singleton)
+
+
 
 ex0 :: IntMap Int
 ex0 = empty
@@ -29,10 +29,14 @@ ex2 = empty
       # insert 30 30
       # insert 0  1234
 
+
+testAll :: TestSuite
 testAll = suite "Data.IntMap" do
   suite "Unit Tests" tests
   suite "QuickCheck" props
 
+
+tests :: TestSuite
 tests = do
     test "lookup in empty map" $ Assert.equal Nothing (lookup 0 ex0)
     test "lookup in singleton map" $ Assert.equal (Just 1234) (lookup 0 ex1)
@@ -53,6 +57,8 @@ tests = do
     testAlter
     Internal.tests
 
+
+testAlter :: TestSuite
 testAlter = do
   suite "alter" do
     test "adding" do
@@ -75,6 +81,8 @@ testAlter = do
     alterDel   = alter (const Nothing)
     alterUpd   = alter (map (_ + 1))
 
+
+props :: TestSuite
 props = do
   test "insert then delete identity"
     $ quickCheck \(TIntMap m) k s -> delete k (insert k s m) === m

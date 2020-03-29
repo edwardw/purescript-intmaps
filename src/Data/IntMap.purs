@@ -104,7 +104,7 @@ instance intMapFoldable :: Foldable IntMap where
 
 instance intMapTraversable :: Traversable IntMap where
   traverse f = traverseWithKey (\_ -> f)
-  sequence = traverseWithKey (\_ -> id)
+  sequence = traverseWithKey (\_ -> identity)
 
 instance intMapEq :: (Eq a) => Eq (IntMap a) where
   eq Empty Empty = true
@@ -270,7 +270,7 @@ alter f k t =
 -- | /O(n+m)/. Difference between two maps (based on keys).
 difference :: forall a b. IntMap a -> IntMap b -> IntMap a
 difference m1 m2 =
-  mergeWithKey (\_ _ _ -> Nothing) id (const Empty) m1 m2
+  mergeWithKey (\_ _ _ -> Nothing) identity (const Empty) m1 m2
 
 -- | /O(n+m)/. Difference with a combining function.
 differenceWith :: forall a b. (a -> b -> Maybe a)
@@ -285,7 +285,7 @@ differenceWith f m1 m2 =
 differenceWithKey :: forall a b. (Int -> a -> b -> Maybe a)
                   -> IntMap a -> IntMap b -> IntMap a
 differenceWithKey f m1 m2 =
-  mergeWithKey f id (const Empty) m1 m2
+  mergeWithKey f identity (const Empty) m1 m2
 
 -- | Unions two `IntMap`s together using a splatting function. If
 -- | a key is present in both constituent lists then the resulting
